@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>DeFi</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1-rc.0/web3.min.js"
+    integrity="sha512-+4Gl8sbHe5qD5EQiPtIva4be9TwUmmzgYJUdGbhsLYNegQw4Quda/4QdZpJzx8cHq2s1F4PoIpAnERQ0hHTcNQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="index.js"></script>
+</head>
+
+<body style="background-color:#d5eaf2">
+  <div class="container">
+    <div class="container d-flex justify-content-center" style='margin-top:10px;color:rgb(71, 69, 69)'>
+      <h1>DeFi App</h1>
+    </div>
+    <div class="container d-flex justify-content-center" style='margin-top:20px'>
+      <div class=" row">
+
+        <div class=" col">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h3 class="card-title ">Market</h3>
+              <hr />
+              <h6 class="card-subtitle mb-2 text-muted">Total supply of cETH</h6>
+              <div class="d-flex" style='margin-top:10px'></div>
+              <p class="card-text" id="total_supply"></p>
+              <hr />
+              <h6 class="card-subtitle mb-2 text-muted">Exchange rate from cEth to ETH</h6>
+              <div class="d-flex" style='margin-top:10px'></div>
+              <p class="card-text" id="ex_rate"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class=" col">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h3 class="card-title text-danger">My Account</h3>
+              <hr />
+              <h6 class="card-subtitle mb-2 text-muted">ETH balance in my wallet</h6>
+              <div class="d-flex" style='margin-top:10px'></div>
+              <p class="card-text" id="meta_balance"></p>
+              <hr />
+              <h6 class="card-subtitle mb-2 text-muted">cETH balance</h6>
+              <div class="d-flex" style='margin-top:10px'></div>
+              <p class="card-text" id="balance"></p>
+              <hr />
+              <h6 class="card-subtitle mb-2 text-muted">ETH supplied to Compound</h6>
+              <div class="d-flex" style='margin-top:10px'></div>
+              <p class="card-text" id="u_balance"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class=" col">
+          <div class="card" style="width: 28rem;">
+            <div class="card-body">
+              <h3 class='text-primary'>Transfer cETH</h3>
+              <hr />
+              <h6 class="card-subtitle mb-2 text-muted" id="max_transfer"></h6>
+              <form class="row">
+                <div class="input-group mb-3" style='margin-top:5px'>
+                  <span class="input-group-text">cETH</span>
+                  <input type="text" class="form-control" id="transfer_am" placeholder="Enter amount">
+                </div>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" id="transfer_add" placeholder="Enter recipient address"
+                    required>
+                </div>
+                <div class="text-danger" id="transfer_error" style="margin-top:1px"></div>
+                <div class="d-flex justify-content-center" style='margin-top:10px'>
+                  <button class="btn btn-primary" type="button" onclick="userTransfer()">transfer</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container d-flex justify-content-center" style='margin-top:40px'>
+      <div class=" row">
+
+        <div class=" col">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h3 class='text-primary'>ETH to cETH</h3>
+              <hr />
+              <h6 class="card-subtitle mb-2 text-muted" id="max_mint"></h6>
+              <form class="row">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">ETH</span>
+                  <input type="text" class="form-control" id="mint_am" placeholder="Enter amount">
+                </div>
+                <div class="text-danger" id="mint_error" style="margin-top:1px"></div>
+                <div class="d-flex justify-content-center" style='margin-top:10px'>
+                  <button class="btn btn-primary" type="button" onclick="userMint()">exchange</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class=" col">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h3 class='text-primary'>Withdraw by cETH</h3>
+              <hr />
+              <h6 class="card-subtitle mb-2 text-muted" id="max_redeem"></h6>
+              <form class="row">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">cETH</span>
+                  <input type="text" class="form-control" id="redeem_am" placeholder="Enter amount">
+                </div>
+                <div class="text-danger" id="redeem_error" style="margin-top:1px"></div>
+                <div class="d-flex justify-content-center" style='margin-top:10px'>
+                  <button class="btn btn-primary" type="button" onclick="userRedeem()">exchange</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class=" col">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h3 class='text-primary'>Withdraw by ETH</h3>
+              <hr />
+              <h6 class="card-subtitle mb-2 text-muted" id="max_redeem_u"></h6>
+              <form class="row">
+                <div class="input-group mb-3">
+                  <span class="input-group-text">ETH</span>
+                  <input type="text" class="form-control" id="redeem_u_am" placeholder="Enter amount">
+                </div>
+                <div class="text-danger" id="redeem_u_error" style="margin-top:1px"></div>
+                <div class="d-flex justify-content-center" style='margin-top:10px'>
+                  <button class="btn btn-primary" type="button" onclick="userRedeemUnderlying()">exchange</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+<footer>
+  <div class="text-center p-4">
+    © Created by Anna Gutsul
+  </div>
+</footer>
+
+</html>
